@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqjtu.bookstore.dao.FondInfoDao">
+	
+	<insert id="addFondInfo" parameterType="FondInfo">
+		insert into fond_info(fond_id,fans_id,idol_id) 
+		values(#{fondId},#{fansId},#{idolId})
+	</insert>
+	
+	<delete id="deleteFondInfo" parameterType="FondInfo">
+		delete from fond_info where fond_id = #{fondId}
+	</delete>
+	
+	<resultMap type="FondInfo" id="fondinfomap">
+		<id column="fond_id" property="fondId"/>
+		<result column="fans_id" property="fansId"/>
+		<result column="idol_id" property="idolId"/>
+	</resultMap>
+	
+	<select id="queryFondInfoCount" parameterType="FondInfo"
+	resultType="Long" >
+		select count(*) from fond_info
+		<where>
+			<if test="fondId != null and fondId !=''">
+				and fond_id = #{fondId}
+			</if>
+			<if test="fansId != null and fansId !=''">
+				and fans_id = #{fansId}
+			</if>
+			<if test="idolId != null and idolId !=''">
+				and idol_id = #{idolId}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryFondInfo" parameterType="FondInfo"
+	resultType="List" resultMap="fondinfomap">
+		select * from fond_info
+		<where>
+			<if test="fondId != null and fondId !=''">
+				and fond_id = #{fondId}
+			</if>
+			<if test="fansId != null and fansId !=''">
+				and fans_id = #{fansId}
+			</if>
+			<if test="idolId != null and idolId !=''">
+				and idol_id = #{idolId}
+			</if>
+		</where>
+	</select>
+
+</mapper>

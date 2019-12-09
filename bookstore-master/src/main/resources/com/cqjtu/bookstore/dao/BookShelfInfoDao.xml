@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqjtu.bookstore.dao.BookShelfInfoDao">
+	
+	<insert id="addBookshelfInfo" parameterType="FondInfo">
+		insert into bookshelf_info(bookshelf_id,read_log,user_id,novel_id) 
+		values(#{bookshelfId},#{readLog},#{userInfo.userId},#{novelInfo.novelId})
+	</insert>
+	
+	<delete id="deleteBookshelfInfo" parameterType="BookShelfInfo">
+		delete from bookshelf_info where bookshelf_id = #{bookshelfId}
+	</delete>
+	
+	<update id="updateBookshelfInfo" parameterType="BookShelfInfo">
+		update bookshelf_info set read_log = #{readLog}
+		where bookshelf_id = #{bookshelfId}
+	</update>
+	
+	<resultMap type="BookShelfInfo" id="bookshelfinfomap">
+		<id column="bookshelf_id" property="bookshelfId"/>
+		<result column="read_log" property="readLog"/>
+		<association property="userInfo" javaType="UserInfo">
+			<id column="user_id" property="userId"/>
+			<result column="user_name" property="userName"/>
+			<result column="user_tele" property="userTele"/>
+			<result column="user_email" property="userEmail"/>
+			<result column="user_password" property="userPassword"/>
+			<result column="user_avatar" property="userAvatar"/>
+			<result column="user_vip" property="userVip"/>
+			<result column="enroll_date" property="enrollDate"/>
+			<result column="vip_date" property="vipDate"/>
+		</association >
+		<association property="novelInfo" javaType="NovelInfo" resultMap="novelinfomap"/>
+		<!-- <association property="novelInfo" javaType="NovelInfo">
+			<id column="novel_id" property="novelId"/>
+			<result column="novel_name" property="novelName"/>
+			<result column="novel_style" property="novelStyle"/>
+			<result column="novel_status" property="novelStatus"/>
+			<result column="novel_attribute" property="novelAttribute"/>
+			<result column="novel_synopsis" property="novelSynopsis"/>
+			<result column="novel_lable" property="novelLable"/>
+			<result column="novel_content" property="novelContent"/>
+			<result column="novel_image" property="novelImage"/>
+			<result column="create_date" property="createDate"/>
+			<result column="update_date" property="updateDate"/>
+			<result column="novel_grade" property="novelGrade"/>
+			<result column="novel_count" property="novelCount"/>
+			<result column="pageview_count" property="pageviewCount"/>
+			<result column="collection_count" property="collectionCount"/>
+			<result column="praise_count" property="praiseCount"/>
+		</association > -->
+	</resultMap>
+	
+	<resultMap type="NovelInfo" id="novelinfomap">
+		<id column="novel_id" property="novelId"/>
+			<result column="novel_name" property="novelName"/>
+			<result column="novel_style" property="novelStyle"/>
+			<result column="novel_status" property="novelStatus"/>
+			<result column="novel_attribute" property="novelAttribute"/>
+			<result column="novel_synopsis" property="novelSynopsis"/>
+			<result column="novel_lable" property="novelLable"/>
+			<result column="novel_content" property="novelContent"/>
+			<result column="novel_image" property="novelImage"/>
+			<result column="create_date" property="createDate"/>
+			<result column="update_date" property="updateDate"/>
+			<result column="novel_grade" property="novelGrade"/>
+			<result column="novel_count" property="novelCount"/>
+			<result column="pageview_count" property="pageviewCount"/>
+			<result column="collection_count" property="collectionCount"/>
+			<result column="praise_count" property="praiseCount"/>
+		<association property="authorInfo" javaType="userInfo">
+			<id column="user_id" property="userId"/>
+			<result column="user_name" property="userName"/>
+			<result column="user_tele" property="userTele"/>
+			<result column="user_email" property="userEmail"/>
+			<result column="user_password" property="userPassword"/>
+			<result column="user_avatar" property="userAvatar"/>
+			<result column="user_vip" property="userVip"/>
+			<result column="enroll_date" property="enrollDate"/>
+			<result column="vip_date" property="vipDate"/>
+		</association>
+		<collection property="chapterInfo" ofType="ChapterInfo">
+			<id column="chapter_id" property="chapterId"/>
+			<result column="chapter_name" property="chapterName"/>
+			<result column="chapter_content" property="chapterContent"/>
+			<result column="chapter_index" property="chapterIndex"/>
+			<result column="chapter_count" property="chapterCount"/>
+			<result column="create_date" property="createDate"/>
+		</collection>
+	</resultMap>
+	
+	<select id="queryBookShelfInfoCount" parameterType="BookShelfInfo"
+	resultType="Long" >
+		select count(*) from bookshelf_info b,user_info u,novel_info n
+		<where>
+			b.user_id=u.user_id and b.novel_id=n.novel_id
+			<if test="bookshelfId != null and bookshelfId !=''">
+				and b.bookshelf_id = #{bookshelfId}
+			</if>
+			<if test="userInfo != null and userInfo.userId !=''">
+				and b.user_id = #{userInfo.userId}
+			</if>
+			<if test="novelInfo != null and novelInfo.novelId !=''">
+				and b.novel_id = #{novelInfo.novelId}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryBookShelfInfo" parameterType="BookShelfInfo"
+	resultType="List" resultMap="bookshelfinfomap">
+		select * from bookshelf_info b,user_info u,novel_info n left outer join chapter_info c on n.novel_id = c.novel_id
+		<where>
+			b.user_id=u.user_id and b.novel_id=n.novel_id
+			<if test="bookshelfId != null and bookshelfId !=''">
+				and b.bookshelf_id = #{bookshelfId}
+			</if>
+			<if test="userInfo != null and userInfo.userId !=''">
+				and b.user_id = #{userInfo.userId}
+			</if>
+			<if test="novelInfo != null and novelInfo.novelId !=''">
+				and b.novel_id = #{novelInfo.novelId}
+			</if>
+		</where>
+	</select>
+
+</mapper>

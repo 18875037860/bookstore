@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqjtu.bookstore.dao.UserInfoDao">
+	
+	<insert id="addUserInfo" parameterType="UserInfo">
+		insert into user_info(user_id,user_name,user_tele,user_email,user_password,user_avatar,user_vip,enroll_date,vip_date) 
+		values(#{userId},#{userName},#{userTele},#{userEmail},#{userPassword},#{userAvatar},#{userVip},#{enrollDate},#{vipDate})
+	</insert>
+	
+	<delete id="deleteUserInfo" parameterType="UserInfo">
+		delete from user_info where user_id = #{userId}
+	</delete>
+	
+	<update id="updateUserInfo" parameterType="UserInfo">
+		update user_info set user_name = #{userName},
+		user_tele = #{userTele},
+		user_email = #{userEmail},
+		user_password = #{userPassword},
+		user_avatar = #{userAvatar},
+		user_vip = #{userVip},
+		enroll_date = #{enrollDate},
+		vip_date = #{vipDate}
+		where user_id = #{userId}
+	</update>
+	
+	<resultMap type="UserInfo" id="userinfomap">
+		<id column="user_id" property="userId"/>
+		<result column="user_name" property="userName"/>
+		<result column="user_tele" property="userTele"/>
+		<result column="user_email" property="userEmail"/>
+		<result column="user_password" property="userPassword"/>
+		<result column="user_avatar" property="userAvatar"/>
+		<result column="user_vip" property="userVip"/>
+		<result column="enroll_date" property="enrollDate"/>
+		<result column="vip_date" property="vipDate"/>
+		<collection property="novelInfo" ofType="NovelInfo">
+			<id column="novel_id" property="novelId"/>
+			<result column="novel_name" property="novelName"/>
+			<result column="novel_style" property="novelStyle"/>
+			<result column="novel_status" property="novelStatus"/>
+			<result column="novel_attribute" property="novelAttribute"/>
+			<result column="novel_synopsis" property="novelSynopsis"/>
+			<result column="novel_lable" property="novelLable"/>
+			<result column="novel_content" property="novelContent"/>
+			<result column="novel_image" property="novelImage"/>
+			<result column="create_date" property="createDate"/>
+			<result column="update_date" property="updateDate"/>
+			<result column="novel_grade" property="novelGrade"/>
+			<result column="novel_count" property="novelCount"/>
+			<result column="pageview_count" property="pageviewCount"/>
+			<result column="collection_count" property="collectionCount"/>
+			<result column="praise_count" property="praiseCount"/>
+		</collection>
+	</resultMap>
+	
+	<resultMap type="UserInfo" id="user1infomap">
+		<id column="user_id" property="userId"/>
+		<result column="user_name" property="userName"/>
+		<result column="user_tele" property="userTele"/>
+		<result column="user_email" property="userEmail"/>
+		<result column="user_password" property="userPassword"/>
+		<result column="user_avatar" property="userAvatar"/>
+		<result column="user_vip" property="userVip"/>
+		<result column="enroll_date" property="enrollDate"/>
+		<result column="vip_date" property="vipDate"/>
+	</resultMap>
+	
+	<select id="queryUserInfoCount" parameterType="UserInfo"
+	resultType="Long" >
+		select count(*) from user_info u left outer join novel_info n on u.user_id = n.author_id
+		<where>
+			<if test="userId != null and userId !=''">
+				and u.user_id = #{userId}
+			</if>
+			<if test="userName != null and userName !=''">
+				and u.user_name = #{userName}
+			</if>
+			<if test="userTele != null and userTele !=''">
+				and u.user_tele = #{userTele}
+			</if>
+			<if test="userEmail != null and userEmail !=''">
+				and u.user_email = #{userEmail}
+			</if>
+			<if test="userVip != null and userVip !=''">
+				and u.user_vip = #{userVip}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryUserInfo" parameterType="UserInfo"
+	resultType="List" resultMap="userinfomap">
+		select * from user_info u left outer join novel_info n on u.user_id = n.author_id
+		<where>
+			<if test="userId != null and userId !=''">
+				and u.user_id = #{userId}
+			</if>
+			<if test="userName != null and userName !=''">
+				and u.user_name = #{userName}
+			</if>
+			<if test="userTele != null and userTele !=''">
+				and u.user_tele = #{userTele}
+			</if>
+			<if test="userEmail != null and userEmail !=''">
+				and u.user_email = #{userEmail}
+			</if>
+			<if test="userVip != null and userVip !=''">
+				and u.user_vip = #{userVip}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryUser" parameterType="UserInfo"
+	resultType="List" resultMap="userinfomap">
+		select * from user_info
+		<where>
+			<if test="userId != null and userId !=''">
+				and user_id = #{userId}
+			</if>
+		</where>
+	</select>
+
+</mapper>
